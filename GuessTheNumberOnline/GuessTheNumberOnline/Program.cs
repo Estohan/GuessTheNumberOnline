@@ -20,7 +20,7 @@ namespace GuessTheNumberOnline {
             }*/
         }
 
-        static async void StartServer2() {
+        /*static async void StartServer2() {
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 42023);
 
             using (Socket listener = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)) {
@@ -32,15 +32,65 @@ namespace GuessTheNumberOnline {
                 while (true) {
                     // Receive message
                     var buffer = new byte[1_024];
-                    //var received = await handler.ReceiveAsync(buffer, SocketFlags.None);
-                    //var response = Encoding.UTF8.GetString(buffer, 0, received);
+                    var received = await handler.ReceiveAsync(buffer, SocketFlags.None);
+                    var response = Encoding.UTF8.GetString(buffer, 0, received);
+
+                    string eom = "<|EOM|>";
+
+                    if (response.IndexOf(eom) > -1) { // is end of message
+                        Console.WriteLine($"Socket server received message: \"{response.Replace(eom, "")}\"");
+
+                        string ackMessage = "<|ACK}>";
+                        byte[] echoBytes = Encoding.UTF8.GetBytes(ackMessage);
+
+                        await handler.SendAsync(echoBytes, 0);
+                        Console.WriteLine($"Socket server sent acknowledgment: \"{ackMessage}\"");
+
+                        break;
+                    }
+
+                    // Sample output:
+                    //   Socket server received message: "Hi friends!"
+                    //   Socket server sent acknowledgment: "<|ACK|>"
+
+                    // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/socket-services
                 }
             }
-        }
+        }*/
 
-        static async void StartClient2() {
-            // TODO
-        }
+        /*static async void StartClient2(IPAddress serverAddress, ushort portNumber) {
+            IPEndPoint ipEndPoint = new IPEndPoint(serverAddress, portNumber);
+
+            using (Socket client = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)) {
+
+                await client.ConnectAsync(ipEndPoint);
+
+                while (true) {
+                    // Send message.
+                    string message = "Hi friends!<|EOM|>";
+                    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+                    _ = await client.SendAsync(messageBytes, SocketFlags.None);
+                    Console.WriteLine($"Socket client sent message: \"{message}\"");
+
+                    // Receive ACK.
+                    byte[] buffer = new byte[1024];
+                    var received = await client.ReceiveAsync(buffer, SocketFlags.None);
+                    string response = Encoding.UTF8.GetString(buffer, 0, received);
+
+                    if (response == "<|ACK|>") {
+                        Console.WriteLine($"Socket client received acknowledgment: \"{response}\"");
+                        break;
+                    }
+
+                    // Sample output:
+                    //   Socket client sent message: "Hi friends!<|EOM|>"
+                    //   Socket client received ackowledgment: "<|ACK|>"
+
+                    // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/socket-services
+                }
+            }
+        }*/
 
 
 
