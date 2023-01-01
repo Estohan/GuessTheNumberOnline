@@ -8,24 +8,29 @@ using System.Text;
 
 namespace GuessTheNumberOnline {
     class Program {
+        const ushort serverPortNumber = 42023;
+
         static void Main(string[] args) {
             char input;
 
             input = Console.ReadKey().KeyChar;
 
-            /*if (input == 's') {
+            if (input == 's') {
                 StartServer2();
             } else {
-                StartClient2();
-            }*/
+                StartClient2(IPAddress.Parse(GetExternalIPAddress()), serverPortNumber);
+            }
         }
 
-        /*static async void StartServer2() {
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 42023);
+        static async void StartServer2() {
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, serverPortNumber);
 
             using (Socket listener = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)) {
                 listener.Bind(ipEndPoint);
                 listener.Listen(100);
+
+                Console.WriteLine($"Listening for connections on port {serverPortNumber}.");
+                Console.WriteLine($"Your IP address is {GetExternalIPAddress()}.");
 
                 Socket handler = await listener.AcceptAsync();
 
@@ -56,9 +61,11 @@ namespace GuessTheNumberOnline {
                     // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/socket-services
                 }
             }
-        }*/
+        }
 
-        /*static async void StartClient2(IPAddress serverAddress, ushort portNumber) {
+        static async void StartClient2(IPAddress serverAddress, ushort portNumber) {
+            Console.WriteLine($"Attempting to connect to {serverAddress.ToString()}:{portNumber}");
+
             IPEndPoint ipEndPoint = new IPEndPoint(serverAddress, portNumber);
 
             using (Socket client = new Socket(ipEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp)) {
@@ -90,15 +97,12 @@ namespace GuessTheNumberOnline {
                     // https://learn.microsoft.com/en-us/dotnet/fundamentals/networking/sockets/socket-services
                 }
             }
-        }*/
-
-
-
-        static void TestFunction() {
-            Console.WriteLine("Hello from the test function!");
+        }
+        static string GetExternalIPAddress(string serviceURL = "https://ipinfo.io/ip") {
+            return new WebClient().DownloadString(serviceURL);
         }
 
-        static void StartServer() {
+        /*static void StartServer() {
             Console.WriteLine("Server starting...");
             // Console.WriteLine("Your IP address is: " + ShowExternalIPAddress());
 
@@ -124,9 +128,9 @@ namespace GuessTheNumberOnline {
 
             Console.WriteLine("Main done...");
             Console.ReadKey();
-        }
+        }*/
 
-        static void StartClient() {
+        /*static void StartClient() {
             string serverAddress;
 
             Console.WriteLine("Client starting...");
@@ -150,10 +154,7 @@ namespace GuessTheNumberOnline {
 
             Console.WriteLine("Main done...");
             Console.ReadKey();
-        }
-
-        static string ShowExternalIPAddress(string serviceURL = "https://ipinfo.io/ip") {
-            return new WebClient().DownloadString(serviceURL);
         }*/
+
     }
 }
