@@ -21,6 +21,10 @@ namespace GuessTheNumberOnline {
             }
         }
 
+        static void TestFunction() {
+            Console.WriteLine("Hello from the test function!");
+        }
+
         static void StartServer() {
             Console.WriteLine("Server starting...");
 
